@@ -14,10 +14,14 @@ A party game of one-liners, in the spirit of Quiplash. One shared screen for the
 
 Host controls at the bottom of the big screen: read prompts aloud, pause, skip.
 
+## Prompt decks
+
+Default is **After Dark (25+)**. Switch to Mixed or Classic (family friendly) in the lobby under *Settings & custom prompts*.
+
 ## Custom prompts
 
 - **Quick:** in the lobby, open *Settings & custom prompts* and paste your own, one per line. They save on that device. Tick *Only use my prompts* for an all-custom game.
-- **Permanent:** edit `prompts.js`. One string per prompt, `____` for a blank.
+- **Permanent:** edit `prompts.js` (`ZINGER_PROMPTS_DARK` for After Dark, `ZINGER_PROMPTS` for Classic). One string per prompt, `____` for a blank.
 
 ## How it works
 

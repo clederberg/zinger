@@ -89,7 +89,7 @@ const H = {
   phase: 'lobby', round: 0, matchups: [], queue: [], vi: 0, final: null,
   timer: null, deadline: 0, onEnd: null, paused: false, pauseLeft: 0,
   deck: [], deckDirty: true, lastKey: '',
-  settings: Object.assign({ tts: false, customOnly: false, custom: '' }, store.get('zinger-settings', {})),
+  settings: Object.assign({ tts: false, customOnly: false, custom: '', deck: 'dark' }, store.get('zinger-settings', {})),
 };
 
 function startHost() {
@@ -211,7 +211,9 @@ const remaining = () => H.paused ? H.pauseLeft / 1000 : (H.deadline ? Math.max(0
 function customPrompts() { return H.settings.custom.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 500); }
 function buildDeck() {
   const c = customPrompts();
-  const list = H.settings.customOnly && c.length ? c : [...(window.ZINGER_PROMPTS || []), ...c];
+  const classic = window.ZINGER_PROMPTS || [], dark = window.ZINGER_PROMPTS_DARK || [];
+  const base = H.settings.deck === 'classic' ? classic : H.settings.deck === 'both' ? [...classic, ...dark] : dark;
+  const list = H.settings.customOnly && c.length ? c : [...base, ...c];
   H.deck = shuffle([...new Set(list)]); H.deckDirty = false;
 }
 function drawPrompt() { if (!H.deck.length) buildDeck(); return H.deck.pop() || 'Say something funny'; }
@@ -466,11 +468,17 @@ function hostStage() {
           <div id="live"></div>
           <details class="settings">
             <summary>Settings &amp; custom prompts</summary>
+            <label style="display:block">Prompt deck
+              <select data-set="deck">
+                <option value="dark" ${s.deck === 'dark' ? 'selected' : ''}>After Dark (25+)</option>
+                <option value="both" ${s.deck === 'both' ? 'selected' : ''}>Mixed (After Dark + Classic)</option>
+                <option value="classic" ${s.deck === 'classic' ? 'selected' : ''}>Classic (family friendly)</option>
+              </select></label>
             <label><input type="checkbox" data-set="tts" ${s.tts ? 'checked' : ''}> Read prompts and answers aloud</label>
             <label style="display:block">Your own prompts, one per line (use ____ for a blank)
               <textarea data-set="custom" placeholder="The worst thing to say at Thanksgiving dinner">${esc(s.custom)}</textarea></label>
             <label><input type="checkbox" data-set="customOnly" ${s.customOnly ? 'checked' : ''}> Only use my prompts</label>
-            <p class="sub" style="font-size:14px">${(window.ZINGER_PROMPTS || []).length} built-in prompts. Custom prompts save on this device.</p>
+            <p class="sub" style="font-size:14px">${(window.ZINGER_PROMPTS_DARK || []).length} After Dark + ${(window.ZINGER_PROMPTS || []).length} Classic prompts built in. Settings save on this device.</p>
           </details>
         </div>
       </div>`;
@@ -572,7 +580,7 @@ function wireHost(root) {
     else if (a === 'again') backToLobby();
     else if (a === 'tts') { H.settings.tts = !H.settings.tts; saveSettings(); H.lastKey = ''; renderHost(); if (H.settings.tts) speak('Read aloud is on.'); }
   }));
-  root.querySelectorAll('[data-set]').forEach(el => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
+  root.querySelectorAll('[data-set]').forEach(el => el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => {
     const k = el.dataset.set;
     H.settings[k] = el.type === 'checkbox' ? el.checked : el.value;
     if (k !== 'tts') H.deckDirty = true;
