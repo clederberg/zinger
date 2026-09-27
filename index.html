@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zinger</title>
+<meta name="description" content="Zinger: a party game of one-liners. Host on a big screen, play on your phones.">
+<meta name="theme-color" content="#1b1033">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23ffd23f'/><text x='32' y='47' font-size='40' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='%231b1033'>Z</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="home" class="screen">
+  <div class="home-wrap">
+    <h1 class="logo">Zinger</h1>
+    <p class="tagline">The party game of one-liners. One screen for the room, a phone for everyone.</p>
+
+    <section class="card join-card">
+      <h2>Join a game</h2>
+      <form id="joinForm" autocomplete="off">
+        <label>Room code
+          <input id="joinCode" maxlength="4" placeholder="ABCD" autocapitalize="characters" spellcheck="false" required>
+        </label>
+        <label>Your name
+          <input id="joinName" maxlength="14" placeholder="Name" required>
+        </label>
+        <button class="btn big" type="submit">Join</button>
+        <p id="joinErr" class="err" role="alert"></p>
+      </form>
+    </section>
+
+    <section class="card host-card">
+      <h2>Host a game</h2>
+      <p>Open this on a TV, laptop or anything everyone can see. 3 to 8 players join from their phones.</p>
+      <button id="hostBtn" class="btn big alt">Host on this screen</button>
+    </section>
+
+    <details class="how">
+      <summary>How to play</summary>
+      <ol>
+        <li>Everyone gets fill-in-the-blank prompts on their phone. Each prompt goes to two players.</li>
+        <li>Write the funniest answer you can before time runs out.</li>
+        <li>Answers go head to head on the big screen. Everyone else votes for the one they like best.</li>
+        <li>Points are based on your share of the votes. Take every vote for a <b>Shutout</b> bonus.</li>
+        <li>Round 2 is worth double. Round 3 is the <b>Last Word</b>: one prompt for everyone, and each player gets 3 votes.</li>
+      </ol>
+    </details>
+  </div>
+</main>
+
+<main id="host" class="screen" hidden></main>
+<main id="play" class="screen" hidden></main>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="prompts.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
